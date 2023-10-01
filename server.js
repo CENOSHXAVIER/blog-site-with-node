@@ -1,42 +1,46 @@
-const http = require('http');
-const fs= require('fs');
+const http = require("http");
+const fs = require("fs");
 
-const server=http.createServer((req,res) =>{
-  console.log(req.url,req.method);
+const server = http.createServer((req, res) => {
+  console.log(req.url, req.method);
 
   //Set Header content type
-  res.setHeader('Content-type','text/html');
-  
-  let path = './views/';
+  res.setHeader("Content-type", "text/html");
 
-  switch(req.url){
-    case '/':
-      path+='index.html';
+  let path = "./views/";
+
+  switch (req.url) {
+    case "/":
+      path += "index.html";
       res.statusCode = 200;
       break;
-    case '/about':
-      path+='about.html';
+    case "/about":
+      path += "about.html";
       res.statusCode = 200;
+      break;
+    case "/about-me":
+      res.statusCode = 301;
+      res.setHeader("Location", "/about");
+      res.end();
       break;
     default:
-      path+='404.html';
+      path += "404.html";
       res.statusCode = 404;
-      break;   
+      break;
   }
 
   //Send HTML files
-  fs.readFile(path,(err,data) => {
-    if(err){
+  fs.readFile(path, (err, data) => {
+    if (err) {
       console.log(err);
       res.end();
-    }else{
+    } else {
       // res.write(data);
       res.end(data);
     }
   });
-
 });
 
-server.listen(3000,'localhost',() =>{
-  console.log('listening for requests at port 3000')
-})
+server.listen(3000, "localhost", () => {
+  console.log("listening for requests at port 3000");
+});
