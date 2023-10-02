@@ -1,0 +1,15 @@
+{
+  "name": "phantom-blog",
+  "version": "1.0.0",
+  "description": "A simple blog powered by node js.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "Cenosh Xavier",
+  "license": "ISC",
+  "dependencies": {
+    "lodash": "^4.17.21"
+  }
+}
