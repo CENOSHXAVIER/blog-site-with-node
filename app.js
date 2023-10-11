@@ -1,63 +1,72 @@
 const express = require("express");
-const mongoose = require('mongoose');
-const Blog = require('./models/blog')
+const mongoose = require("mongoose");
+const Blog = require("./models/blog");
 
 // express app
 const app = express();
 
 //connect to mongo db
-const dbURI = 'mongodb+srv://netninja:imnetninja@phantom-blog.pt10fvr.mongodb.net/Phantom-blog?retryWrites=true&w=majority'
+const dbURI =
+  "mongodb+srv://netninja:imnetninja@phantom-blog.pt10fvr.mongodb.net/Phantom-blog?retryWrites=true&w=majority";
 
-mongoose.connect(dbURI)
-.then((result) =>{
-  console.log('connected to db')
-  app.listen(3000)
-})
-.catch((err) => console.log(err))
+mongoose
+  .connect(dbURI)
+  .then((result) => {
+    console.log("connected to db");
+    app.listen(3000);
+  })
+  .catch((err) => console.log(err));
 
 //register view engines
-app.set('view engine','ejs');
+app.set("view engine", "ejs");
 
 //middleware & static files
-app.use(express.static('public'));
+app.use(express.static("public"));
 
 //mongoode and mongo sandbox routes
-app.get('/add-blog',(req,res) =>{
+app.get("/add-blog", (req, res) => {
   const blog = new Blog({
-    title:'newblog2',
-    snippet:'about my new blog',
-    body:'more about my new blog'
+    title: "newblog2",
+    snippet: "about my new blog",
+    body: "more about my new blog",
   });
-  blog.save()
-    .then((result) =>{
+  blog
+    .save()
+    .then((result) => {
       res.send(result);
     })
-    .catch((err)=>{
+    .catch((err) => {
       console.log(err);
-    })
-})
+    });
+});
 
-
-
-app.get('/',(req,res)=> {
-
+app.get("/", (req, res) => {
   const blogs = [
-    {title: 'Yoshi finds eggs', snippet: 'Lorem ipsum dolor sit amet consectetur'},
-    {title: 'Mario finds stars', snippet: 'Lorem ipsum dolor sit amet consectetur'},
-    {title: 'How to defeat bowser', snippet: 'Lorem ipsum dolor sit amet consectetur'}
+    {
+      title: "Yoshi finds eggs",
+      snippet: "Lorem ipsum dolor sit amet consectetur",
+    },
+    {
+      title: "Mario finds stars",
+      snippet: "Lorem ipsum dolor sit amet consectetur",
+    },
+    {
+      title: "How to defeat bowser",
+      snippet: "Lorem ipsum dolor sit amet consectetur",
+    },
   ];
 
-  res.render('index',{title:'Home',blogs})
+  res.render("index", { title: "Home", blogs });
 });
 
-app.get('/about',(req,res) => {
-  res.render('about',{ title: 'About' });
+app.get("/about", (req, res) => {
+  res.render("about", { title: "About" });
 });
 
-app.get('/blogs/create',(req,res) =>{
-  res.render('create',{ title: 'Create' });
+app.get("/blogs/create", (req, res) => {
+  res.render("create", { title: "Create" });
 });
 
-app.use((req,res) => {
-  res.status(404),render('404',{ title: '404' })
+app.use((req, res) => {
+  res.status(404), render("404", { title: "404" });
 });
