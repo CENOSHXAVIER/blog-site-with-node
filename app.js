@@ -1,13 +1,43 @@
 const express = require("express");
+const mongoose = require('mongoose');
+const Blog = require('./models/blog')
 
 // express app
 const app = express();
 
-//listen for requests
-app.listen(3000);
+//connect to mongo db
+const dbURI = 'mongodb+srv://netninja:imnetninja@phantom-blog.pt10fvr.mongodb.net/Phantom-blog?retryWrites=true&w=majority'
+
+mongoose.connect(dbURI)
+.then((result) =>{
+  console.log('connected to db')
+  app.listen(3000)
+})
+.catch((err) => console.log(err))
 
 //register view engines
 app.set('view engine','ejs');
+
+//middleware & static files
+app.use(express.static('public'));
+
+//mongoode and mongo sandbox routes
+app.get('/add-blog',(req,res) =>{
+  const blog = new Blog({
+    title:'newblog2',
+    snippet:'about my new blog',
+    body:'more about my new blog'
+  });
+  blog.save()
+    .then((result) =>{
+      res.send(result);
+    })
+    .catch((err)=>{
+      console.log(err);
+    })
+})
+
+
 
 app.get('/',(req,res)=> {
 
