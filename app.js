@@ -23,41 +23,20 @@ app.set("view engine", "ejs");
 //middleware & static files
 app.use(express.static("public"));
 
-//mongoode and mongo sandbox routes
-app.get("/add-blog", (req, res) => {
-  const blog = new Blog({
-    title: "newblog2",
-    snippet: "about my new blog",
-    body: "more about my new blog",
-  });
-  blog
-    .save()
-    .then((result) => {
-      res.send(result);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-});
-
 app.get("/", (req, res) => {
-  const blogs = [
-    {
-      title: "Yoshi finds eggs",
-      snippet: "Lorem ipsum dolor sit amet consectetur",
-    },
-    {
-      title: "Mario finds stars",
-      snippet: "Lorem ipsum dolor sit amet consectetur",
-    },
-    {
-      title: "How to defeat bowser",
-      snippet: "Lorem ipsum dolor sit amet consectetur",
-    },
-  ];
-
-  res.render("index", { title: "Home", blogs });
+  res.redirect('/blogs');
 });
+
+app.get("/blogs",(req,res)=> {
+  Blog.find()
+    .then((result)=>{
+      res.render('index',{title:"All Blogs",blogs:result})
+  })
+    .catch((err)=>{
+      console.log(err);
+    })
+  
+})
 
 app.get("/about", (req, res) => {
   res.render("about", { title: "About" });
@@ -68,5 +47,5 @@ app.get("/blogs/create", (req, res) => {
 });
 
 app.use((req, res) => {
-  res.status(404), render("404", { title: "404" });
+  res.status(404).render("404", { title: "404" });
 });
