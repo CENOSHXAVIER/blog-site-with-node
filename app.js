@@ -36,6 +36,7 @@ app.get("/blogs", (req, res) => {
 });
 
 app.post("/blogs", (req, res) => {
+  console.log(req.body);
   const blog = new Blog(req.body);
   blog
     .save()
@@ -46,6 +47,14 @@ app.post("/blogs", (req, res) => {
       console.log(err);
     });
 });
+
+app.get('/blogs/:id',(req,res) =>{
+  const id = req.params.id;
+  Blog.findById(id)
+  .then((result) =>{
+    res.render('details',{blog: result , title:'Blog Details'})
+  })
+})
 
 app.get("/about", (req, res) => {
   res.render("about", { title: "About" });
@@ -58,3 +67,4 @@ app.get("/blogs/create", (req, res) => {
 app.use((req, res) => {
   res.status(404).render("404", { title: "404" });
 });
+
