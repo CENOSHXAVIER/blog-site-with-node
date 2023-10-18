@@ -1,13 +1,13 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const Blog = require("./models/blog");
-import * as env from 'dotenv';
-dotenv.config();
+require('dotenv').config();
+
 // express app
 const app = express();
 
 mongoose
-  .connect(process.env.dbURI)
+  .connect(process.env.URI)
   .then((result) => {
     console.log("connected to db");
     app.listen(3000);
