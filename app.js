@@ -1,16 +1,13 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const Blog = require("./models/blog");
-
+import * as env from 'dotenv';
+dotenv.config();
 // express app
 const app = express();
 
-//connect to mongo db
-const dbURI =
-  "mongodb+srv://netninja:imnetninja@phantom-blog.pt10fvr.mongodb.net/Phantom-blog?retryWrites=true&w=majority";
-
 mongoose
-  .connect(dbURI)
+  .connect(process.env.dbURI)
   .then((result) => {
     console.log("connected to db");
     app.listen(3000);
@@ -22,21 +19,33 @@ app.set("view engine", "ejs");
 
 //middleware & static files
 app.use(express.static("public"));
+app.use(express.urlencoded({ extended: true }));
 
 app.get("/", (req, res) => {
-  res.redirect('/blogs');
+  res.redirect("/blogs");
 });
 
-app.get("/blogs",(req,res)=> {
+app.get("/blogs", (req, res) => {
   Blog.find()
-    .then((result)=>{
-      res.render('index',{title:"All Blogs",blogs:result})
-  })
-    .catch((err)=>{
-      console.log(err);
+    .then((result) => {
+      res.render("index", { title: "All Blogs", blogs: result });
     })
-  
-})
+    .catch((err) => {
+      console.log(err);
+    });
+});
+
+app.post("/blogs", (req, res) => {
+  const blog = new Blog(req.body);
+  blog
+    .save()
+    .then((result) => {
+      res.redirect("/blogs");
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
 
 app.get("/about", (req, res) => {
   res.render("about", { title: "About" });
